@@ -1,0 +1,66 @@
+<?xml version="1.0" encoding="UTF-8" ?>
+<!DOCTYPE mapper
+        PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN"
+        "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+
+<mapper namespace="com.hao.dao.BorrowMapper">
+
+    <!--查询所有没有还书人员-->
+    <select id="selectAllBorrowbook" resultType="Borrowbook">
+        select * from  borrowbook  where status="未归还"
+    </select>
+
+    <!--查询所有还书人员-->
+    <select id="selectAllReturnbook" resultType="Borrowbook">
+        select * from  borrowbook  where status="已归还"
+    </select>
+
+    <!--查询某一用户的借书情况-->
+    <select id="selectByBorrowName" resultType="Borrowbook">
+        select * from borrowbook where borrowName=#{borrowName} and status="未归还"
+    </select>
+
+    <!--查询某一用户的还书情况-->
+    <select id="selectReturnByBorrowName" resultType="Borrowbook">
+        select * from borrowbook where borrowName=#{borrowName} and status="已归还"
+    </select>
+
+
+    <!--插入借书数据-->
+    <insert id="addBorrowbook" parameterType="Borrowbook">
+        insert into borrowbook(borrowId,borrowName,bookId,bookName,borrowtime,returnday,status)
+        values(#{borrowId},#{borrowName},#{bookId},#{bookName},#{borrowtime},#{returnday},#{status})
+    </insert>
+
+    <!--还书的时候设置书的状态已归还-->
+    <update id="updateBorrowbook" parameterType="String">
+        update borrowbook set status="已归还" where borrowId=#{borrowId}
+    </update>
+
+    <!--查询所有行数-->
+    <select id="queryAllRows" resultType="int">
+        select count(*) from borrowbook
+    </select>
+
+    <!--管理员根据归还图书名找对应的借书记录-->
+    <select id="selectByReturnBookName" resultType="Borrowbook">
+        select * from borrowbook where borrowName=#{borrowName} and status="已归还"
+    </select>
+
+    <!--管理员根据未归还图书名找对应的借书记录-->
+    <select id="selectByBorrowBookName" resultType="Borrowbook">
+        select * from borrowbook where borrowName=#{borrowName} and status="未归还"
+    </select>
+
+    <!--用户根据未归还图书找到对应的结束记录-->
+    <select id="selectUserByBorrowBookName" resultType="Borrowbook">
+        select * from borrowbook where bookName=#{bookName} and status="未归还" and borrowName=#{borrowName}
+    </select>
+
+    <!--用户根据归还图书名找对应的借书记录-->
+    <select id="selectUserByReturnBookName" resultType="Borrowbook">
+        select * from borrowbook
+        where bookName=#{bookName} and status="已归还" and borrowName=#{borrowName}
+    </select>
+
+</mapper>
